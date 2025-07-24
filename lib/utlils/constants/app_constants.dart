@@ -2,12 +2,18 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class Const{
+class Const {
   static const Color themeColor = Color(0xffea4c89);
+
   // static const Color themeColor = Color(0xffff143f);
   static const Color whiteColor = Color(0xffFFFFFF);
   static const Color buttonColor = Color(0xffea4c89);
   static String shoesDesc = "Step up your everyday fashion game with the Levi’s Men Sneaker Shoes – a perfect fusion of timeless style, all-day comfort, and rugged durability. Crafted for the modern man who values quality and aesthetics, these sneakers are designed to transition seamlessly from casual outings to smart-casual events.Made from premium synthetic leather.S Men day comfort, as quality.";
+  static String prefUserToken = "userToken";
+  static var nameController = TextEditingController();
+  static var emailController = TextEditingController();
+  static var passController = TextEditingController();
+  static var phoneController = TextEditingController();
 
   static List <Color> mColors = [
     Color(0xffdd111d),
@@ -18,7 +24,9 @@ class Const{
     Color(0xffFFFF08),
     // Color(0xffB748EA),
   ];
- static BoxDecoration commonBorderDecoration({double width = 1, Color color = Colors.black}) {
+
+  static BoxDecoration commonBorderDecoration(
+      {double width = 1, Color color = Colors.black}) {
     return BoxDecoration(
       border: Border.all(
         width: width,
@@ -26,5 +34,22 @@ class Const{
       ),
     );
   }
+
+ static  showSnackbar({
+    required BuildContext context,
+    required String message,
+   Color backgroundColor = Colors.black,
+    Duration duration = const Duration(seconds: 2),
+  }) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: backgroundColor,
+        duration: duration,
+      ),
+    );
+  }
 }
+
 

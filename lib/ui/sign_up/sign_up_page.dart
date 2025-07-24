@@ -1,9 +1,32 @@
 import 'package:e_commerce_app/app_root/app_Routes.dart';
+import 'package:e_commerce_app/ui/sign_up/bloc/user_bloc.dart';
+import 'package:e_commerce_app/ui/sign_up/bloc/user_event.dart';
+import 'package:e_commerce_app/ui/sign_up/bloc/user_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../const/constants.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignUpPage extends StatelessWidget{
+import '../../utlils/constants/app_constants.dart';
+
+class SignUpPage extends StatefulWidget{
+  @override
+  State<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignUpPage> {
+
+   var nameController = TextEditingController();
+   var emailController = TextEditingController();
+   var passController = TextEditingController();
+   var phoneController = TextEditingController();
+   var status;
+
+  bool isLoading = false;
+  @override
+  void initState() {
+    super.initState();
+    // BlocProvider.of<>(context)
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,6 +48,7 @@ class SignUpPage extends StatelessWidget{
                   Text("Register", style: TextStyle(fontSize: 24,color: Colors.black,fontWeight: FontWeight.bold,),),
                   SizedBox(height: 20,),
                   TextField(
+                    controller: nameController,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
                         suffixIcon: Icon(Icons.account_circle,color: Const.themeColor,),
@@ -46,6 +70,7 @@ class SignUpPage extends StatelessWidget{
                   ),
                   SizedBox(height: 13,),
                   TextField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     style: TextStyle(fontSize: 12),
                     decoration: InputDecoration(
@@ -68,6 +93,7 @@ class SignUpPage extends StatelessWidget{
                   ),
                   SizedBox(height: 13,),
                   TextField(
+                    controller:passController,
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
                     style: TextStyle(fontSize: 12),
@@ -89,6 +115,7 @@ class SignUpPage extends StatelessWidget{
                   ),
                   SizedBox(height: 13,),
                   TextField(
+                    controller:phoneController,
                     style: TextStyle(fontSize: 12),
                     keyboardType: TextInputType.phone,
                     decoration: InputDecoration(
@@ -109,36 +136,75 @@ class SignUpPage extends StatelessWidget{
                         )
                     ),
                   ),
-
                   SizedBox(height: 34,),
-                  Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(26),
-                    ),
-                    elevation: 3, // Shadow depth (zyada karna ho to increase karo)
-                    child: GestureDetector(
-                      onTap: (){
-                        /// loginTapped
-                        print("Login Tapped");
-                        // Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                        //   return WelcomePage();
-                        // }));
-                      },
-                      child: Container(
-                        height: 45,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Const.themeColor,
-                          borderRadius: BorderRadius.circular(21),
+                  BlocConsumer<UserBloc,UserState>(
+                    listener: (ctx_,state){
+                      if(state is UserLoadingState){
+                        isLoading = true;
+                      }
+                      if(state is UserSuccessState){
+                        isLoading = false;
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Sign Up Successfully!!")));
+                        Navigator.pop(context);
+                        print("SignUp Successfully");
+                      }
+                      if(state is UserFailiurState){
+                        isLoading = false;
+                        Const.showSnackbar(context: context, message: state.errorMsg, backgroundColor: Colors.black);
+                        print("error: ${state.errorMsg}");
+                      }
+                    },
+                    builder: (ctx,state){
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(26),
                         ),
-                        child: Center(
-                          child: Text(
-                            "Sign up",
-                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                        elevation: 3, // Shadow depth (zyada karna ho to increase karo)
+                        child: GestureDetector(
+                          onTap: (){
+                            /// loginTapped
+                            print("signUp Tapped");
+                            print("Name: ${nameController.text}");
+                            print("Phone: ${phoneController.text}");
+                            print("Email: ${emailController.text}");
+                            print("Password: ${passController.text}");
+                            print("Your Status is: $status");
+
+                            context.read<UserBloc>().add(UserRegistrationEvent(
+                              email: nameController.text,
+                              pass: emailController.text,
+                              name: passController.text,
+                              phone: phoneController.text,
+                            ));
+
+                            // Navigator.push(context, MaterialPageRoute(builder: (ctx){
+                            //   return WelcomePage();
+                            // }));
+                          },
+                          child: Container(
+                            height: 45,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Const.themeColor,
+                              borderRadius: BorderRadius.circular(21),
+                            ),
+                            child: Center(
+                              child: isLoading ? Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CircularProgressIndicator(),
+                                  SizedBox(width:7,),
+                                  Text("Signing up..."),
+                                ],
+                              ): Text(
+                                "Sign up",
+                                style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    },
                   ),
                   SizedBox(height:25,),
                   Row(
@@ -148,7 +214,8 @@ class SignUpPage extends StatelessWidget{
                       SizedBox(width: 5,),
                       GestureDetector(
                         onTap: (){
-                          Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD);
+                          Navigator.pop(context);
+                          //Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD);
                         },
                           child: Text("Sign in",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Const.themeColor),)),
                     ],

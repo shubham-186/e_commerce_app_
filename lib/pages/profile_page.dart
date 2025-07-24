@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../const/constants.dart';
+
+import '../utlils/constants/app_constants.dart';
 
 class ProfilePage extends StatelessWidget {
   @override

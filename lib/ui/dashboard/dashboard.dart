@@ -1,10 +1,10 @@
-import 'package:e_commerce_app/const/constants.dart';
 import 'package:e_commerce_app/pages/profile_page.dart';
 import 'package:flutter/material.dart';
-import 'cart_page.dart';
-import 'category_page.dart';
-import 'favourite_page.dart';
-import 'homepage.dart';
+import '../../pages/cart_page.dart';
+import '../../pages/category_page.dart';
+import '../../pages/favourite_page.dart';
+import '../../pages/homepage.dart';
+import '../../utlils/constants/app_constants.dart';
 
 class Dashboard extends StatefulWidget {
   @override

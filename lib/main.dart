@@ -1,19 +1,18 @@
-import 'package:e_commerce_app/const/constants.dart';
-import 'package:e_commerce_app/pages/dashboard.dart';
-import 'package:e_commerce_app/pages/homepage.dart';
-import 'package:e_commerce_app/pages/login_page.dart';
-import 'package:e_commerce_app/pages/product_detail_page.dart';
-import 'package:e_commerce_app/pages/sign_up_page.dart';
+import 'package:e_commerce_app/data/remote/helper/api_helper.dart';
+import 'package:e_commerce_app/data/remote/repository/user_repo.dart';
 import 'package:e_commerce_app/pages/splash_page.dart';
-import 'package:e_commerce_app/pages/welcome_page.dart';
+import 'package:e_commerce_app/ui/sign_up/bloc/user_bloc.dart';
+import 'package:e_commerce_app/utlils/constants/app_constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'app_root/app_Routes.dart';
 
 void main(){
-  runApp(MyApp());
+  runApp(MultiBlocProvider(providers: [BlocProvider(create: (context){
+      return UserBloc(userRepo: UserRepository(api_helper: Api_helper()));},)],
+      child: MyApp()));
+  // runApp(MyApp());
 }
 class MyApp extends StatelessWidget{
   @override
@@ -24,7 +23,7 @@ class MyApp extends StatelessWidget{
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
-      // home: ProductDetailPage(),
+      // home: SplashPage(),
       initialRoute: AppRoutes.ROUTE_SPLASH,
       routes: AppRoutes.routes,
     );

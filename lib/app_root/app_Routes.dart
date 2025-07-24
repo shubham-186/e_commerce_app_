@@ -1,5 +1,5 @@
-import 'package:e_commerce_app/pages/dashboard.dart';
-import 'package:e_commerce_app/pages/login_page.dart';
+import 'package:e_commerce_app/ui/dashboard/dashboard.dart';
+import 'package:e_commerce_app/ui/login/login_page.dart';
 import 'package:e_commerce_app/pages/product_detail_page.dart';
 import 'package:e_commerce_app/pages/splash_page.dart';
 import 'package:e_commerce_app/pages/welcome_page.dart';
@@ -8,7 +8,7 @@ import '../pages/cart_page.dart';
 import '../pages/category_page.dart';
 import '../pages/favourite_page.dart';
 import '../pages/profile_page.dart';
-import '../pages/sign_up_page.dart';
+import '../ui/sign_up/sign_up_page.dart';
 class AppRoutes{
 
   static const String ROUTE_SPLASH = "/";
