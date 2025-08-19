@@ -20,18 +20,9 @@ import '../../utlils/constants/app_constants.dart';
     var emailControler = TextEditingController();
     var passControler = TextEditingController();
     bool isLoading = false;
+    bool isLogin = true;
     @override
-    void initState() {
-      super.initState();
-      /*SystemChrome.setSystemUIOverlayStyle(
-        const SystemUiOverlayStyle(
-          statusBarColor: Colors.white,
-          statusBarIconBrightness: Brightness.dark,
-          statusBarBrightness: Brightness.light, // iOS ke liye optional
-        ),
-      );*/
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []); //
-    }
+
     bool isChecked = false;
     @override
     Widget build(BuildContext context) {
@@ -71,6 +62,8 @@ import '../../utlils/constants/app_constants.dart';
                                       return "Email is requires";
                                     }else if(!emailRegExp.hasMatch(value)){
                                       return "Please enter valid email";
+                                    }else{
+                                      return null;
                                     }
                                   },
                                   controller: emailControler,
@@ -100,6 +93,8 @@ import '../../utlils/constants/app_constants.dart';
                                       return "Password are requires";
                                     }else if(value.length<=4){
                                       return "Please enter email more than 8 characters ";
+                                    }else{
+                                      return null;
                                     }
                                   },
                                   controller: passControler,
@@ -173,20 +168,27 @@ import '../../utlils/constants/app_constants.dart';
                         ),
                         SizedBox(height: 14,),
                         BlocConsumer<UserBloc,UserState>(
+                          listenWhen: (ps,cs){
+                            return isLogin;
+                          },
+                          buildWhen: (ps,cs){
+                            return isLogin;
+                          },
                           listener: (c,state){
                             if(state is UserLoadingState){
                               isLoading = true;
                             }
                             if(state is UserSuccessState){
                               isLoading = false;
-                              Const.showSnackbar(context: context, message: "Successfully Login",backgroundColor: Colors.green);
-                              Navigator.pushNamed(context, AppRoutes.DASHBOARD);
+                              // Const.showSnackbar(context: context, message: "Successfully Login",backgroundColor: Colors.green);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Logged in Successfully!!"),backgroundColor: Colors.green,));
+                              Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD);
                               print("Successfully Login");
                             }
                             if(state is UserFailiurState){
                               isLoading = false;
-                              Const.showSnackbar(context: context,
-                              message: state.errorMsg,backgroundColor: Colors.red);
+                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMsg),backgroundColor: Colors.red,));
+                              print("The Error message is: ${state.errorMsg}");
                             }
                           },
                           builder: (ctx,state){
@@ -201,6 +203,9 @@ import '../../utlils/constants/app_constants.dart';
                                   print("email: ${emailControler.text}");
                                   print("pass: ${passControler.text}");
                                   if(formKey.currentState!.validate()){
+                                    isLogin = true;
+                                    print("The Login Status is now: $isLogin");
+
                                     context.read<UserBloc>().add(UserLoginEvent(
                                         email: emailControler.text,
                                         pass: passControler.text
@@ -213,7 +218,7 @@ import '../../utlils/constants/app_constants.dart';
                                   mainAxisAlignment:MainAxisAlignment.center,
                                   children: [
                                     CircularProgressIndicator(),
-                                    Text("Signing in")
+                                    Text("Signing in",style: TextStyle(color: Colors.white),)
                                   ],
                                 ): Container(
                                   height: 45,
@@ -241,6 +246,8 @@ import '../../utlils/constants/app_constants.dart';
                             SizedBox(width: 5,),
                             GestureDetector(
                               onTap: (){
+                                isLogin = false;
+                                print("The Login Status is now: $isLogin");
                                 Navigator.pushNamed(context, AppRoutes.SIGN_UP);
                               },
                                 child: Text("Sign Up",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 14,color: Const.themeColor),)),
@@ -390,5 +397,3 @@ import '../../utlils/constants/app_constants.dart';
     }
 
 }
-/// r@gmail.com
-  /// 123456

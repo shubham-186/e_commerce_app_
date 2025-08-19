@@ -1,0 +1,58 @@
+class WishModel{
+static List<Map<String,String>> list = [
+  {
+    "name":"Headphones",
+    "image":"assets/icons/airdopes.png",
+    "price":"1200",
+  },
+  {
+    "name":"Shoes",
+    "image":"assets/icons/shoes.png",
+    "price":"1500",
+  },
+  {
+    "name":"Watches",
+    "image":"assets/icons/watch_ic.png",
+    "price":"3200",
+  },
+  {
+    "name":"Phones",
+    "image":"assets/icons/iphone_ic.png",
+    "price":"135000",
+  },
+  {
+    "name":"Clothes",
+    "image":"assets/icons/clothes_ic.png",
+    "price":"300",
+  },
+];
+static List<Map<String,String>> trending_list = [
+  {
+    "collections":"assets/images/casual.jpg",
+  },
+  {
+    "collections":"assets/images/saari.png",
+  },
+  {
+    "collections":"assets/images/jacket.jpg",
+  },
+  {
+    "collections":"assets/images/headset.jpg",
+  },
+  {
+    "collections":"assets/images/formal.jpg",
+  },
+  {
+    "collections":"assets/images/earphone.jpg",
+  },
+  {
+    "collections":"assets/images/shoes_bw.jpg",
+  },
+  {
+    "collections":"assets/images/beared_oil.jpg",
+  },
+  {
+    "collections":"assets/images/nose_cleaner.jpg",
+  },
+];
+}

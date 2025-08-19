@@ -21,6 +21,7 @@ class _SignUpPageState extends State<SignUpPage> {
    var phoneController = TextEditingController();
    var status;
 
+
   bool isLoading = false;
   @override
   void initState() {
@@ -43,9 +44,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 MainAxisAlignment.start,    // vertical top
                 children: [
                   SizedBox(height: 20),
-                  Image.asset("assets/images/sign_up.jpg", width: 200, height: 200),
-                  SizedBox(height: 20,),
-                  Text("Register", style: TextStyle(fontSize: 24,color: Colors.black,fontWeight: FontWeight.bold,),),
+                  // Image.asset("assets/images/sign_up.jpg", width: 200, height: 200),
+                  Image.asset("assets/icons/account.png", width: 260, height: 260),
+                  SizedBox(height: 1,),
+                  // Text("Register", style: TextStyle(fontSize: 24,color: Colors.black,fontWeight: FontWeight.bold,),),
                   SizedBox(height: 20,),
                   TextField(
                     controller: nameController,
@@ -150,7 +152,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       }
                       if(state is UserFailiurState){
                         isLoading = false;
-                        Const.showSnackbar(context: context, message: state.errorMsg, backgroundColor: Colors.black);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(state.errorMsg),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                         print("error: ${state.errorMsg}");
                       }
                     },
@@ -168,12 +175,11 @@ class _SignUpPageState extends State<SignUpPage> {
                             print("Phone: ${phoneController.text}");
                             print("Email: ${emailController.text}");
                             print("Password: ${passController.text}");
-                            print("Your Status is: $status");
 
                             context.read<UserBloc>().add(UserRegistrationEvent(
-                              email: nameController.text,
-                              pass: emailController.text,
-                              name: passController.text,
+                              email: emailController.text,
+                              pass: passController.text,
+                              name: nameController.text,
                               phone: phoneController.text,
                             ));
 

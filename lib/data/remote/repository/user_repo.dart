@@ -1,41 +1,43 @@
 import 'package:e_commerce_app/data/remote/helper/api_helper.dart';
 import 'package:e_commerce_app/utlils/constants/app_urls.dart';
 
-class UserRepository{
- Api_helper api_helper;
- UserRepository({required this.api_helper});
+class UserRepository {
+  ApiHelper apiHelper;
+  UserRepository({required this.apiHelper});
 
-  Future<dynamic> loginUser({required String email, required String pass})async{
-    Map<String,dynamic> loginDetails = {
-      "email":email,
-      "password":pass
-    };
+  Future<dynamic> loginUser({required String email, required String pass}) async{
+
     try{
-      var res = await api_helper.post_api(url: AppUrls.login,mBodyParams:loginDetails ,isAuth: true);
+      dynamic res = await apiHelper.postApi(
+          url: AppUrls.login, isAuth: true,
+          mBodyParams: {
+            "email":email,
+            "password":pass
+          });
       return res;
-    }catch(e){
+    } catch(e){
       rethrow;
     }
-}
-Future<dynamic> signUpUser({
-  required String name,
-  required String phone,
-  required String email,
-  required String pass,
-})async{
-    Map<String,dynamic> signDetials = {
-     "name":name,
-     "mobile_number":phone,
-     "email":email,
-     "password":pass,
-    };
+  }
+
+  Future<dynamic> signUpUser({
+    required String name,
+    required String mobNo,
+    required String email,
+    required String pass,
+  }) async{
+
     try{
-      var res = await api_helper.post_api(url: AppUrls.sign_up,mBodyParams: signDetials,isAuth: true);
+      dynamic res = await apiHelper.postApi(url: AppUrls.sign_up, isAuth: true, mBodyParams: {
+        "name": name,
+        "email": email,
+        "mobile_number": mobNo,
+        "password": pass
+      });
       return res;
-    }catch(e){
+    } catch(e){
       rethrow;
     }
-    // api_helper.post_api(url: AppUrls.sign_up,mBodyParams:signDetials ,isAuth: true);
-    return true;
-}
+
+  }
 }

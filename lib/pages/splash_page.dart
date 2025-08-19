@@ -5,6 +5,7 @@ import 'package:e_commerce_app/ui/login/login_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utlils/constants/app_constants.dart';
 
@@ -24,7 +25,13 @@ class _SplashPageState extends State<SplashPage> {
       //   context,
       //   MaterialPageRoute(builder: (context) => LoginPage()),
       // );
-      Navigator.pushReplacementNamed(context, AppRoutes.LOGIN_PAGE);
+      SharedPreferences sharedPref = await SharedPreferences.getInstance();
+      String token = sharedPref.getString(Const.prefUserToken)??"";
+      String navigationName = AppRoutes.LOGIN_PAGE;
+      if(token.isNotEmpty){
+        navigationName  = AppRoutes.DASHBOARD;
+      }
+      Navigator.pushReplacementNamed(context, navigationName);
     });
   }
   @override
@@ -36,8 +43,8 @@ class _SplashPageState extends State<SplashPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("assets/icons/shop_logoo.png",
-              width: 250,
-              height: 250,
+              width: 398,
+              height: 298,
             )
           ],
         ),

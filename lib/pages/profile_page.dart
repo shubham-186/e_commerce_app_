@@ -13,6 +13,7 @@ class ProfilePage extends StatelessWidget {
       backgroundColor: Const.themeColor,
       title: Text("Profile Page"),
       ),
+      body: Center(child: Text("Yet To Work"),),
     );
   }
 }

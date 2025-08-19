@@ -51,8 +51,11 @@ class _DashboardState extends State<Dashboard> {
       ),*/
 
       /// ✅ Show selected page
-      body: _pages[_selectedIndex],
-
+      // body: _pages[_selectedIndex],
+      body:IndexedStack(
+        index: _selectedIndex,
+        children: [..._pages],
+      ),
       /// Bottom Nav
       bottomNavigationBar: Container(
         height: 70,

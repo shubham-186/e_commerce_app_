@@ -1,8 +1,12 @@
 import 'package:e_commerce_app/app_root/app_Routes.dart';
+import 'package:e_commerce_app/data/remote/model/product_model.dart';
+import 'package:e_commerce_app/ui/my_cart/bloc/cart_bloc.dart';
+import 'package:e_commerce_app/ui/my_cart/bloc/cart_event.dart';
+import 'package:e_commerce_app/ui/my_cart/bloc/cart_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../utlils/constants/app_constants.dart';
 
 class ProductDetailPage extends StatefulWidget{
@@ -11,9 +15,15 @@ class ProductDetailPage extends StatefulWidget{
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
+  bool isAdding = false;
+  ProductModel? getProducts;
+
+
+  int qty = 1;
   final PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    getProducts = ModalRoute.of(context)!.settings.arguments as ProductModel;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -51,12 +61,12 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                 // border: Border.all(width: 1),
                 borderRadius: BorderRadius.circular(12)
             ),
-            height: 190,
+            height: 250,
             width: 300,
             child: Column(
               children: [
                 Container(
-                  height: 150,
+                  height: 210,
                   width: 285,
                   child: PageView.builder(
                     controller: _pageController,
@@ -67,13 +77,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Container(
-                              width: 135,
-                              height: 140,
+                              width: 190,
+                              height: 205,
                               decoration: BoxDecoration(
+                                // border: Border.all(width: 1),
                                 borderRadius: BorderRadius.circular(5),
                                 image: DecorationImage(
-                                  image: AssetImage("assets/icons/shoes.png"),
-                                  fit: BoxFit.cover,
+                                  image: NetworkImage(getProducts!.image),
+                                  fit: BoxFit.contain,
                                 ),
                               ),
                             ),
@@ -105,11 +116,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Levi's Men Sneaker Shoes",style: TextStyle(
+                Text("${getProducts!.name}",style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 20
                 ),),
-                Text("\$1036",style: TextStyle(fontSize:22),)
+                Text(Const.indCurr+getProducts!.price,style: TextStyle(fontSize:22),)
                 // Text("Pearl White for Men"),
               ],
             ),
@@ -194,7 +205,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
           ),
             SizedBox(height: 10,),
             Container(
-              height: 78,
+              height: 74,
               width: double.infinity,
               decoration:BoxDecoration(
                 color: Colors.black,
@@ -208,8 +219,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 7),
                       child: Container(
-                        width: 115,
-                        height: 38,
+                        width: 120,
+                        height: 36,
                         decoration: BoxDecoration(
                             color:Colors.black,
                             border: Border.all(width: 1.5,color: Colors.white),
@@ -219,30 +230,79 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            IconButton(onPressed: (){}, icon: Icon(Icons.remove,size: 18,color: Colors.white,)),
-                            Text("1",style: TextStyle(color: Colors.white,)),
-                            IconButton(onPressed: (){}, icon: Icon(Icons.add,size: 18,color: Colors.white,)),
+                            IconButton(onPressed: (){
+                              setState(() {
+                                if(qty>0){
+                                  qty--;
+                                }
+                              });
+                            }, icon: Icon(Icons.remove,size: 18,color: Colors.white,)),
+                            Text("$qty",style: TextStyle(color: Colors.white,)),
+                            IconButton(onPressed: (){
+                              setState(() {
+                                qty++;
+
+                              });
+                            }, icon: Icon(Icons.add,size: 18,color: Colors.white,)),
                           ],
                         ),
                       ),
                     ),
-                    Container(
-                      height: 58,
-                      width: 190,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(36),
-                        color: Colors.pink,
+                    BlocConsumer<CartBloc,CartState>(
+                        listener: (ctx,state){
+                          if(state is CartLoadingState){
+                             isAdding = true;
+                          }
+                          if(state is CartLoadedState){
+                            isAdding = true;
+                            Navigator.pushReplacementNamed(context, AppRoutes.CART_PAGE);
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Added Successfully",style: TextStyle(color: Colors.white),),backgroundColor: Colors.green,));
+                            // print("The Succeed msg is: ${state.succeedMsg}");
+                          }
+                          if(state is CartFailiurState){
+                            isAdding = false;
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMsg,style: TextStyle(color: Colors.white) ),backgroundColor: Colors.red,));
+                            print("The Error message is: ${state.errorMsg}");
+                          }
+                        },
+                        builder: (_,state){
+                          return GestureDetector(
+                            onTap: (){
+                              context.read<CartBloc>().add(AddToCartEvent(pro_id: int.parse(getProducts!.id), qty: qty));
+                              print("selected product ID: ${getProducts!.id}");
+                              print("selected product quanties: $qty");
+                              // calculateProductPrice(pro as List<ProductModel>);
+                            },
+                            child: Container(
+                              height: 55,
+                              width: 190,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(36),
+                                color: Colors.pink,
+                              ),
+                              child: Center(child: isAdding?Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(child: CircularProgressIndicator(color: Colors.white,),),
+                                  SizedBox(width: 10,),
+                                  Text("Adding",style: TextStyle(color: Const.whiteColor,fontWeight: FontWeight.w500,fontSize:13),)
+                                ],
+                              ): Text("Add to Cart",style: TextStyle(color: Const.whiteColor,fontWeight: FontWeight.w500),)),
+                            ),
+                          );
+                        },
                       ),
-                      child: Center(child: Text("Add to Cart",style: TextStyle(color: Const.whiteColor,fontWeight: FontWeight.w500),)),
-                    )
                   ],
                 ),
               ),
-            )
+            ),
+            SizedBox(height: 10,)
           ],
         ),
       ));
   }
+
 }
 Widget getColorToneWidget(Color mColor){
   return Container(

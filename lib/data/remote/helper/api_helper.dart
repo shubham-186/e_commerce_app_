@@ -1,55 +1,115 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:e_commerce_app/data/remote/helper/app_exception.dart';
+import 'package:e_commerce_app/data/remote/model/product_model.dart';
 import 'package:e_commerce_app/utlils/constants/app_constants.dart';
+import 'package:e_commerce_app/utlils/constants/app_urls.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-class Api_helper{
-  /// get_api
 
-  /// post_api
-  Future<dynamic> post_api({required String url,Map<String,
-      dynamic>? mBodyParams, Map<String, String>?
-  mHeders, bool isAuth = false,
+class ApiHelper {
+  ///get
+  getApi({
+    required String url,
+    Map<String, String>? mHeader,
+    bool isAuth = false,
+  }) async{
+
+    if (isAuth == false) {
+      mHeader ??= {};
+
+      String token = "";
+      ///get user token from prefs
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      token = prefs.getString(Const.prefUserToken) ?? "";
+
+      mHeader["Authorization"] = "Bearer $token";
+    }
+    try {
+      var res = await http.get(
+        Uri.parse(url),
+        headers: mHeader,
+      );
+      print(res.body);
+      return handleResponse(res);
+    } on SocketException {
+      throw (NetworkException(message: "No Internet Connection"));
+    } catch (e) {
+      throw (ServerException(message: "Server Error: $e"));
+    }
+
+  }
+
+  ///post
+  Future<dynamic> postApi({
+    required String url,
+    Map<String, dynamic>? mBodyParams,
+    Map<String, String>? mHeader,
+    bool isAuth = false,
   }) async {
-    mHeders ??= {'Content-Type': 'application/json',
-      'Accept': 'application/json',};
-    if (!isAuth) {
-      SharedPreferences sharePreff = await SharedPreferences.getInstance();
-      String token = sharePreff.getString(Const.prefUserToken) ?? "";
-      print(Const.prefUserToken);
-      mHeders["Authorization"] = "Bearer $token";
+    if (isAuth == false) {
+      mHeader ??= {};
+
+      String token = "";
+      ///get user token from prefs
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      token = prefs.getString(Const.prefUserToken) ?? "";
+
+      mHeader["Authorization"] = "Bearer $token";
+
     }
     try {
       var res = await http.post(
         Uri.parse(url),
         body: jsonEncode(mBodyParams),
-        headers: mHeders,
+        headers: mHeader,
       );
-      return jsonResException(res);
+      // print(res.body);
+      return handleResponse(res);
     } on SocketException {
-      throw NetworkException(errorMsg: "No Internet");
+      throw (NetworkException(message: "No Internet Connection"));
     } catch (e) {
-      throw ServerException(errorMsg: 'server issue: $e');
+      throw (ServerException(message: "Server Error: $e"));
     }
   }
-  dynamic jsonResException(http.Response response){
-
-    switch (response.statusCode){
-      case 200:{
-        var resData = jsonDecode(response.body);
-        return resData;
-      }
+  dynamic allProductAPI({
+    required String url,
+    String? token,
+    Map<String,String>? mHeader,
+    isAuth = false
+  })async{
+    if(isAuth == false){
+      mHeader = {};
+    }
+    SharedPreferences sp = await SharedPreferences.getInstance();
+   token = sp.getString(Const.prefUserToken)??"";
+    mHeader = {"Authorization":"Bearer $token"};
+    // print("${token}");
+    try{
+      var prodRes = await http.post(Uri.parse(url),headers: mHeader);
+      // print("prodRes ${prodRes.body}");
+      return handleResponse(prodRes);
+    }on SocketException {
+      throw (NetworkException(message: 'No Internet'));
+    }catch(e){
+      throw (ServerException(message: '$e'));
+    }
+  }
+  dynamic handleResponse(http.Response res) {
+    switch (res.statusCode) {
+      case 200:
+        var mData = jsonDecode(res.body);
+        return mData;
       case 400:
-        throw InvalidRequestException(errorMsg: "Bad Request");
+        throw (InvalidInputException(message: "Bad Request"));
       case 401:
-        throw UnAuthorizedException(errorMsg: "Unauthorized Access");
+        throw (UnauthorizedException(message: "Unauthorized Access"));
       case 404:
-        throw NetworkException(errorMsg: "Not Connected");
+        throw (NetworkException(message: "Not Connected"));
       case 500:
-        throw ServerException(errorMsg: response.body.toString());
+        throw (ServerException(message: "Internal Server Error"));
       default:
-        throw ServerException(errorMsg: "Error Occurred while Communicated with server");
+        throw (ServerException(message: "Unknown Error: ${res.statusCode}"));
     }
   }
 }

@@ -1,3 +1,4 @@
+/*
 class MyException implements Exception{
 
   String title;
@@ -9,7 +10,8 @@ class MyException implements Exception{
   }
 }
 class NetworkException extends MyException{
-  NetworkException({required String errorMsg}) : super(title: "Network error",message:errorMsg );
+  NetworkException({required String errorMsg}) :
+        super(title: "No Internet",message:errorMsg );
 }
 class ServerException extends MyException{
   ServerException({required String errorMsg}): super (title: "Server problem",message: errorMsg);
@@ -19,4 +21,36 @@ class InvalidRequestException extends MyException{
 }
 class UnAuthorizedException extends MyException{
 UnAuthorizedException({required String errorMsg}):super(title:"",message: errorMsg);
+}*/
+
+class MyException implements Exception{
+  String title;
+  String message;
+
+  MyException({required this.title, required this.message});
+
+  @override
+  String toString() {
+    return "Exception: $title, Message: $message";
+  }
+
+}
+
+class NetworkException extends MyException {
+  NetworkException({required String message}) : super(title: "No Internet", message: message);
+}
+
+class ServerException extends MyException {
+  ServerException({required String message})
+      : super(title: "Server Error", message: message);
+}
+
+class InvalidInputException extends MyException {
+  InvalidInputException({required String message})
+      : super(title: "Invalid Input", message: message);
+}
+
+class UnauthorizedException extends MyException {
+  UnauthorizedException({required String message})
+      : super(title: "Unauthorized", message: message);
 }

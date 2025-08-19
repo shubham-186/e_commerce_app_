@@ -8,10 +8,18 @@ class FavouritePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Const.whiteColor,
       appBar:  AppBar(
-        foregroundColor: Const.whiteColor,
-        backgroundColor: Const.themeColor,
-        title: Text("Favourite Page"),
+        centerTitle: true,
+        foregroundColor: Colors.black,
+        backgroundColor: Const.whiteColor,
+        title: Text("WishList",style: TextStyle(fontSize: 15,fontWeight: FontWeight.w500),),
+        actions: [
+          Icon(Icons.favorite,color: Colors.red,),
+          SizedBox(width: 6,),
+          Icon(Icons.share),
+          SizedBox(width: 12,),
+        ],
       ),
+      body: Center(child: Text("Yet To Work"),),
     );
   }
 }

@@ -1,0 +1,29 @@
+class DiscountModel{
+  static List<Map<String,String>> discount_list = [
+    {
+      "name":"Watches",
+      "image":"assets/icons/watch_ic.png",
+      "price":"3200",
+    },
+    {
+      "name":"Headphones",
+      "image":"assets/icons/airdopes.png",
+      "price":"1200",
+    },
+    {
+      "name":"Clothes",
+      "image":"assets/icons/clothes_ic.png",
+      "price":"300",
+    },
+    {
+      "name":"Phones",
+      "image":"assets/icons/iphone_ic.png",
+      "price":"135000",
+    },
+    {
+      "name":"Shoes",
+      "image":"assets/icons/shoes.png",
+      "price":"1500",
+    },
+  ];
+}
