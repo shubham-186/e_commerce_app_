@@ -20,9 +20,8 @@ class _SignUpPageState extends State<SignUpPage> {
    var passController = TextEditingController();
    var phoneController = TextEditingController();
    var status;
-
-
   bool isLoading = false;
+
   @override
   void initState() {
     super.initState();

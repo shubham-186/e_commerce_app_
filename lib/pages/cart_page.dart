@@ -1,8 +1,12 @@
+import 'package:e_commerce_app/app_root/app_Routes.dart';
 import 'package:e_commerce_app/data/remote/model/cart_model.dart';
 import 'package:e_commerce_app/data/remote/model/product_model.dart';
 import 'package:e_commerce_app/ui/my_cart/bloc/cart_bloc.dart';
 import 'package:e_commerce_app/ui/my_cart/bloc/cart_event.dart';
 import 'package:e_commerce_app/ui/my_cart/bloc/cart_state.dart';
+import 'package:e_commerce_app/ui/my_orders/bloc/order_bloc.dart';
+import 'package:e_commerce_app/ui/my_orders/bloc/order_event.dart';
+import 'package:e_commerce_app/ui/my_orders/bloc/order_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +19,15 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-
+  bool isLoading = false;
   bool isDeleting = false;
   int qty = 0;
   var calculateCost = 0;
   var totalCost = 0;
   var getPrice = 0;
   int totalProductPrice = 0;
+
+  List<int> cart_id = [];
   @override
   void initState() {
     super.initState();
@@ -49,6 +55,7 @@ class _CartPageState extends State<CartPage> {
                 if(state is CartLoadedState) {
                   // totalCost = 0;
                  totalProductPrice = calculateCartData(state.cartDataModel_res.data);
+                 cart_id.clear();
                  print("Product Price: $totalProductPrice");
                   return Expanded(
                     child:  ListView.builder(
@@ -57,6 +64,9 @@ class _CartPageState extends State<CartPage> {
                         ,itemBuilder: (ctx,index)
                     {
                       CartModel dataItems = state.cartDataModel_res.data[index];
+                     var pro_id = dataItems.id;
+                      cart_id.add(pro_id);
+                      print("The product ID's are: $cart_id");
                       // cartID = dataItems.id;
                       // position = index;
                       // print("The Product names is: ${dataItems.quantity}");
@@ -225,10 +235,16 @@ class _CartPageState extends State<CartPage> {
                   print("The error is: ${state.errorMsg}");
                   // ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMsg,style: TextStyle(color: Colors.white),),backgroundColor: Colors.red,));
                 }
-                return Center(
-                  child: Image.asset("assets/icons/empty_cart.png",
-                    width: 399,
-                    height: 399,
+                return Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    children: [
+                      Image.asset("assets/icons/empty_cart.png",
+                        width: 329,
+                        height: 329,
+                      ),
+                      Text("Your Cart is Empty 🥺",style: TextStyle(fontWeight: FontWeight.w300,fontSize: 18),)
+                    ],
                   )
                 );
               }
@@ -337,28 +353,46 @@ class _CartPageState extends State<CartPage> {
                       borderRadius: BorderRadius.circular(26),
                     ),
                     elevation: 3, // Shadow depth (zyada karna ho to increase karo)
-                    child: GestureDetector(
-                      onTap: (){
-                        /// loginTapped
-                        // print("Login Tapped");
-                        // Navigator.push(context, MaterialPageRoute(builder: (ctx){
-                        //   return WelcomePage();
-                        // }));
+                    child: BlocConsumer<OrderBloc,OrderState>(
+                      listener: (context,state){
+                        if(state is UserLoadingState){
+                          isLoading = true;
+                        }
+                        if(state is OrderSucceedState){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.suceedMsg),
+                            backgroundColor:Colors.green,));
+                          Navigator.pushReplacementNamed(context, AppRoutes.DASHBOARD);
+                          isLoading = false;
+                        }
+                        if(state is OrderFailureState){
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.errorMsg),
+                            backgroundColor: Colors.red,));
+                          isLoading = false;
+                        }
                       },
-                      child: Container(
-                        height: 49,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.pink,
-                          borderRadius: BorderRadius.circular(35),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Checkout",
-                            style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                      builder: (context,state) {
+                        return GestureDetector(
+                          onTap: (){
+                            context.read<OrderBloc>().add(CreateOrderEvent(cart_id: cart_id));
+                          },
+                          child: isLoading? Row(
+                            children: [
+                            Text("Buying", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),
+                            ],
+                          ):Container(
+                            height: 49,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.pink,
+                              borderRadius: BorderRadius.circular(35),
+                            ),
+                            child: Center(
+                              child: Text("Checkout", style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                      }
                     ),
                   ),
                 ],

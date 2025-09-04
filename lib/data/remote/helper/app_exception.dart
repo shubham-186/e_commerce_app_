@@ -41,8 +41,8 @@ class NetworkException extends MyException {
 }
 
 class ServerException extends MyException {
-  ServerException({required String message})
-      : super(title: "Server Error", message: message);
+  ServerException({required super.message})
+      : super(title: "Server Error");
 }
 
 class InvalidInputException extends MyException {

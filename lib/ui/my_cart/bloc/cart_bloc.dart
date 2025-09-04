@@ -8,7 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CartBloc extends Bloc<CartEvent,CartState>{
   CartRepository cartRepo;
   dynamic proRes;
-  List<CartModel>?getCartData;
+
   CartBloc({required this.cartRepo}):super(CartInitialState()){
     on<AddToCartEvent>((event,emit) async {
       // emit(CartLoadingState());
@@ -84,21 +84,4 @@ class CartBloc extends Bloc<CartEvent,CartState>{
       emit(CartFailiurState(errorMsg: e.toString()));
     }
   }
-
-  totolProducts(){
-
-  }
-
-  /*void cal(CartDataModel getCarts) {
-
-    var getPrice;
-    var getQty
-    for(int i = 0 ;i<getCarts.data[0].quantity;i++){
-      getPrice = int.parse(getCarts.data[0].price);
-      getQty = getCarts.data[0].quantity;
-      for(int j = 0; j<getPrice;j++){
-
-      }
-    }
-  }*/
 }

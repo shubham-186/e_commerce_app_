@@ -79,7 +79,6 @@ import '../../utlils/constants/app_constants.dart';
                                           borderSide: BorderSide(color: Const.themeColor),
                                           borderRadius: BorderRadius.circular(61)
                                       ),
-
                                       focusedBorder: OutlineInputBorder(
                                           borderSide: BorderSide(color: Const.themeColor),
                                           borderRadius: BorderRadius.circular(61)
@@ -199,7 +198,6 @@ import '../../utlils/constants/app_constants.dart';
                               elevation: 3, // Shadow depth (zyada karna ho to increase karo)
                               child: GestureDetector(
                                 onTap: (){
-                                  /// loginTapped
                                   print("email: ${emailControler.text}");
                                   print("pass: ${passControler.text}");
                                   if(formKey.currentState!.validate()){

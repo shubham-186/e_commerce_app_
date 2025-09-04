@@ -5,6 +5,8 @@ import 'package:e_commerce_app/data/remote/repository/product_repo.dart';
 import 'package:e_commerce_app/data/remote/repository/user_repo.dart';
 import 'package:e_commerce_app/pages/splash_page.dart';
 import 'package:e_commerce_app/ui/my_cart/bloc/cart_bloc.dart';
+import 'package:e_commerce_app/ui/my_orders/bloc/order_bloc.dart';
+import 'package:e_commerce_app/ui/my_orders/order_repo/OrderRepository.dart';
 import 'package:e_commerce_app/ui/product_detail/bloc/product_bloc.dart';
 import 'package:e_commerce_app/ui/sign_up/bloc/user_bloc.dart';
 import 'package:e_commerce_app/utlils/constants/app_constants.dart';
@@ -22,6 +24,9 @@ void main(){
     }),
     BlocProvider(create: (context){
       return CartBloc(cartRepo: CartRepository(apiHelper: ApiHelper()));}),
+    BlocProvider(create: (context){
+      return OrderBloc(orderRepo: OrderRepository(apiHelper: ApiHelper()));
+    })
   ],
       child: MyApp()));
 }

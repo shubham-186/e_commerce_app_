@@ -22,7 +22,7 @@ class ApiHelper {
       ///get user token from prefs
       SharedPreferences prefs = await SharedPreferences.getInstance();
       token = prefs.getString(Const.prefUserToken) ?? "";
-
+      print("token ${token}");
       mHeader["Authorization"] = "Bearer $token";
     }
     try {
@@ -56,7 +56,6 @@ class ApiHelper {
       token = prefs.getString(Const.prefUserToken) ?? "";
 
       mHeader["Authorization"] = "Bearer $token";
-
     }
     try {
       var res = await http.post(

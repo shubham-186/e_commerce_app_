@@ -6,7 +6,6 @@ class UserRepository {
   UserRepository({required this.apiHelper});
 
   Future<dynamic> loginUser({required String email, required String pass}) async{
-
     try{
       dynamic res = await apiHelper.postApi(
           url: AppUrls.login, isAuth: true,
