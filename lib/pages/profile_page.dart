@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:e_commerce_app/app_root/app_Routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -46,6 +47,7 @@ class _ProfilePageState extends State<ProfilePage> {
           GestureDetector(
             onTap: (){
               print("edit profile");
+
             },
             child: Image.asset("assets/icons/edit.png",
               height: 20,
@@ -75,7 +77,6 @@ class _ProfilePageState extends State<ProfilePage> {
                       border: Border.all(
                           color: Colors.pink,
                           width: 3
-
                       )
                   ),
                 ),
@@ -222,35 +223,35 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(height: 8,),
                 GestureDetector(
                   onTap: (){
-
+                    Navigator.pushNamed(context, AppRoutes.ORDER_HISTORY);
                   },
-                  child: Card(
-                    elevation: 5,
-                    color: Colors.white,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: double.infinity,
-                        height: 45,
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                                color: Colors.white,
-                                width: 1
-                            )
-                        ),
-                        child: Row(
-                          children: [
-                            Icon(Icons.history,size: 20,),
-                            SizedBox(width: 7,),
-                            Text("Order History",style: TextStyle(fontWeight: FontWeight.w500),),
-                            Spacer(),
-                            Icon(Icons.arrow_forward_ios,size: 15,color: Colors.pink,),
-                            SizedBox(width: 7,)
-                          ],
+                      child: Card(
+                        elevation: 5,
+                        color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 45,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: Colors.white,
+                                    width: 1
+                                )
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.history,size: 20,),
+                                SizedBox(width: 7,),
+                                Text("Order History",style: TextStyle(fontWeight: FontWeight.w500),),
+                                Spacer(),
+                                Icon(Icons.arrow_forward_ios,size: 15,color: Colors.pink,),
+                                SizedBox(width: 7,)
+                              ],
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
                 ),
                 SizedBox(height: 8,),
                 Card(

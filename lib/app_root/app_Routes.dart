@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/pages/order_history_page.dart';
 import 'package:e_commerce_app/ui/dashboard/dashboard.dart';
 import 'package:e_commerce_app/ui/login/login_page.dart';
 import 'package:e_commerce_app/pages/product_detail_page.dart';
@@ -23,6 +24,7 @@ class AppRoutes{
   static const String PROFILE_PAGE = "/profile_page";
   static const String PRODUCT_DETAILS = "/product_detail_page";
   static const String TOPDEAL = "/top_deal";
+  static const String ORDER_HISTORY = "/OrderHistory";
 
  static Map<String,Widget Function(BuildContext) > routes = {
    ROUTE_SPLASH : (_) => SplashPage(),
@@ -36,5 +38,6 @@ class AppRoutes{
    PROFILE_PAGE : (_) => ProfilePage(),
    PRODUCT_DETAILS : (_) => ProductDetailPage(),
    TOPDEAL : (_) => TopDeals(),
+   ORDER_HISTORY : (_) => OrderHistory(),
   };
   }

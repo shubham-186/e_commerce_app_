@@ -3,7 +3,10 @@ import 'package:e_commerce_app/data/remote/model/product_model.dart';
 import 'package:e_commerce_app/data/remote/repository/cart_repository.dart';
 import 'package:e_commerce_app/data/remote/repository/product_repo.dart';
 import 'package:e_commerce_app/data/remote/repository/user_repo.dart';
+import 'package:e_commerce_app/pages/order_history_page.dart';
 import 'package:e_commerce_app/pages/splash_page.dart';
+import 'package:e_commerce_app/ui/OrderHistory/OrderBloc/order_history_bloc.dart';
+import 'package:e_commerce_app/ui/OrderHistory/order_history_repo/order_history_repo.dart';
 import 'package:e_commerce_app/ui/my_cart/bloc/cart_bloc.dart';
 import 'package:e_commerce_app/ui/my_orders/bloc/order_bloc.dart';
 import 'package:e_commerce_app/ui/my_orders/order_repo/OrderRepository.dart';
@@ -26,6 +29,10 @@ void main(){
       return CartBloc(cartRepo: CartRepository(apiHelper: ApiHelper()));}),
     BlocProvider(create: (context){
       return OrderBloc(orderRepo: OrderRepository(apiHelper: ApiHelper()));
+    }),
+    BlocProvider(create: (ctx){
+      return OrderHistoryBloc(orderHistoryRepo: OrderHistoryRepo(
+          apiHelper: ApiHelper()));
     })
   ],
       child: MyApp()));
@@ -35,7 +42,11 @@ class MyApp extends StatelessWidget{
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Const.whiteColor
+        scaffoldBackgroundColor: Const.whiteColor,
+        expansionTileTheme: ExpansionTileThemeData(
+          backgroundColor: Colors.white,
+          collapsedBackgroundColor: Colors.white,
+        ),
       ),
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',

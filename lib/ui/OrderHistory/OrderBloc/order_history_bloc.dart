@@ -4,20 +4,21 @@ import 'package:e_commerce_app/ui/OrderHistory/OrderBloc/order_history_state.dar
 import 'package:e_commerce_app/ui/OrderHistory/order_history_repo/order_history_repo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class OrderHistoryBloc extends Bloc<OrderHistoryEvent,OrderHistoryState>{
+class OrderHistoryBloc extends Bloc<OrderHistoryEvent,MyOrderHistoryState>{
   OrderHistoryRepo orderHistoryRepo;
   OrderHistoryBloc({required this.orderHistoryRepo}):super(OrderInitialState()){
-    on<OrderHistoryFetchEvent>((event,emit){
+    on<OrderHistoryFetchEvent>((event,emit)async{
       try{
         emit(OrderHistoryLoadingState());
-        var getOrders = orderHistoryRepo.getOrders_api();
+        dynamic getOrders = await orderHistoryRepo.getOrders_api();
         var orderDetails = OrdersDataModel.fromJson(getOrders);
-        if(getOrders["status"] == true){
+        if(getOrders["status"]){
           emit(OrderHistoryLoadedState(getOrders: orderDetails));
+          print('success Status: ${getOrders["status"]}');
         }
 
       }catch(e){
-        emit(OrderHistoryFailiurState(errorMsg: ''));
+        emit(OrderHistoryFailiurState(errorMsg: e.toString()));
       }
     });
   }

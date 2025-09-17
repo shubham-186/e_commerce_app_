@@ -30,7 +30,7 @@ class OrderModel{
   int id;
   String order_number;
   String status;
-  int total_amount;
+  String total_amount;
   List<ProductModel> product;
 
   OrderModel({
